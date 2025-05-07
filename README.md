@@ -14,7 +14,8 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 - Registro en Google Sheets con trazabilidad.
 - Generación automática de respuestas personalizadas.
 - Notificación por Telegram si la consulta es crítica.  
-**Captura del agente**:  
+
+
 ![image](https://github.com/user-attachments/assets/84aef17d-32e1-4488-bbbd-45febfe9cd15)
 
 ---
@@ -27,7 +28,8 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 - Evalúa candidatos según criterios definidos.
 - Genera correos automáticos según resultado (apto/no apto).
 - Agenda entrevistas y actualiza la base de datos.  
-**Captura del agente**:  
+
+
 ![image](https://github.com/user-attachments/assets/c5292a55-a829-43f6-b194-218ee89e16c5)
 
 ---
@@ -40,7 +42,8 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 - Aprobación previa vía email (opcional).
 - Publicación multicanal en redes sociales.
 - Integración con formularios y carga de imágenes.  
-**Captura del agente**:  
+
+
 ![image](https://github.com/user-attachments/assets/9d8a5037-6334-4979-ad9c-d2a3eefe8114)
 
 ---
@@ -53,7 +56,8 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 - Envía facturas por correo.
 - Alerta de pagos vencidos o ingresos esperados.
 - Genera reportes bajo demanda por texto.  
-**Captura del agente**:  
+
+
 ![image](https://github.com/user-attachments/assets/6930fc4a-50b1-4eeb-b3b0-ebf071c706c1)
 
 ---
@@ -65,7 +69,8 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 - Realiza análisis sobre hojas de datos.
 - Responde preguntas como “¿cuál fue el producto más vendido?”
 - Informa tendencias, outliers y estadísticas claves.  
-**Captura del agente**:  
+
+
 ![image](https://github.com/user-attachments/assets/696ce08d-d3a5-4fac-8163-84916e2aa051)
 
 ---
@@ -77,7 +82,8 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 - Analiza contratos en PDF o texto y detecta riesgos.
 - Responde preguntas legales en lenguaje natural.
 - Entrega resúmenes claros y directos para no-abogados.  
-**Captura del agente**:  
+
+
 ![image](https://github.com/user-attachments/assets/56ee9fef-f253-4068-841c-f0fdcdc0d802)
 
 ---
@@ -89,7 +95,8 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 - Procesa texto y voz en Telegram.
 - Accede a herramientas como calendario, correo, web y redes.
 - Actúa como un verdadero "copiloto" personal y profesional.  
-**Captura del agente**:  
+
+
 ![image](https://github.com/user-attachments/assets/ae6ab798-90b7-48c0-a28c-dd032d63ad71)
 
 
