@@ -6,34 +6,6 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 
 ## 📁 Agentes Incluidos
 
-### 🧾 ClientCare AI
-**Objetivo**: Automatización de la atención al cliente vía email.  
-**Tecnologías**: OpenAI, Gmail, Google Sheets, Telegram  
-**Funcionalidades**:
-- Clasificación automática de correos por tipo y gravedad.
-- Registro en Google Sheets con trazabilidad.
-- Generación automática de respuestas personalizadas.
-- Notificación por Telegram si la consulta es crítica.  
-
-
-![image](https://github.com/user-attachments/assets/84aef17d-32e1-4488-bbbd-45febfe9cd15)
-
----
-
-### 🧑‍💼 TalentBot (RRHH)
-**Objetivo**: Automatizar la recepción y análisis de currículums.  
-**Tecnologías**: Gmail, Google Calendar, OpenAI, Google Sheets  
-**Funcionalidades**:
-- Extrae información clave de CVs.
-- Evalúa candidatos según criterios definidos.
-- Genera correos automáticos según resultado (apto/no apto).
-- Agenda entrevistas y actualiza la base de datos.  
-
-
-![image](https://github.com/user-attachments/assets/c5292a55-a829-43f6-b194-218ee89e16c5)
-
----
-
 ### 📣 MarketingWise AI
 **Objetivo**: Generar y publicar contenido en redes sociales automáticamente.  
 **Tecnologías**: OpenAI, Gmail, APIs sociales (LinkedIn, Instagram, Facebook, X)  
@@ -99,4 +71,30 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 
 ![image](https://github.com/user-attachments/assets/ae6ab798-90b7-48c0-a28c-dd032d63ad71)
 
+---
 
+### 🧾 ClientCare AI
+**Objetivo**: Automatización de la atención al cliente vía email.  
+**Tecnologías**: OpenAI, Gmail, Google Sheets, Telegram  
+**Funcionalidades**:
+- Clasificación automática de correos por tipo y gravedad.
+- Registro en Google Sheets con trazabilidad.
+- Generación automática de respuestas personalizadas.
+- Notificación por Telegram si la consulta es crítica.  
+
+
+![image](https://github.com/user-attachments/assets/84aef17d-32e1-4488-bbbd-45febfe9cd15)
+
+---
+
+### 🧑‍💼 TalentBot (RRHH)
+**Objetivo**: Automatizar la recepción y análisis de currículums.  
+**Tecnologías**: Gmail, Google Calendar, OpenAI, Google Sheets  
+**Funcionalidades**:
+- Extrae información clave de CVs.
+- Evalúa candidatos según criterios definidos.
+- Genera correos automáticos según resultado (apto/no apto).
+- Agenda entrevistas y actualiza la base de datos.  
+
+
+![image](https://github.com/user-attachments/assets/c5292a55-a829-43f6-b194-218ee89e16c5)
