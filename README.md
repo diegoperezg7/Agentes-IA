@@ -4,59 +4,92 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 
 ---
 
-## 📦 Agentes incluidos
+## 📁 Agentes Incluidos
 
-### 1. 🧾 ClientCare AI
-- **Objetivo**: Automatiza la lectura y respuesta de correos entrantes de clientes.
-- **Funcionalidad**:
-  - Lee correos de Gmail.
-  - Analiza el contenido con OpenAI (GPT).
-  - Clasifica el tono y la intención.
-  - Responde automáticamente o reenvía según reglas.
-- **Tecnologías**: n8n, Gmail API, OpenAI API, Supabase
-
----
-
-### 2. 📣 MarketingWise AI
-- **Objetivo**: Generación y publicación de contenido en redes sociales.
-- **Funcionalidad**:
-  - Genera texto para publicaciones (LinkedIn, Instagram, etc.).
-  - Crea imágenes con DALL·E o fallback en Canva.
-  - Publica automáticamente o envía para revisión.
-- **Tecnologías**: Make, OpenAI API, Notion, Buffer API
+### 🧾 ClientCare AI
+**Objetivo**: Automatización de la atención al cliente vía email.  
+**Tecnologías**: OpenAI, Gmail, Google Sheets, Telegram  
+**Funcionalidades**:
+- Clasificación automática de correos por tipo y gravedad.
+- Registro en Google Sheets con trazabilidad.
+- Generación automática de respuestas personalizadas.
+- Notificación por Telegram si la consulta es crítica.  
+**Captura del agente**:  
+![image](https://github.com/user-attachments/assets/84aef17d-32e1-4488-bbbd-45febfe9cd15)
 
 ---
 
-### 3. 🧮 FinanceFlow
-- **Objetivo**: Automatizar tareas contables y financieras.
-- **Funcionalidad**:
-  - Registro automático de ingresos y gastos.
-  - Generación de facturas PDF.
-  - Envío por correo a clientes.
-  - Alertas de pagos vencidos y resumen mensual.
-- **Tecnologías**: n8n, Supabase, Gmail API, Make
+### 🧑‍💼 TalentBot (RRHH)
+**Objetivo**: Automatizar la recepción y análisis de currículums.  
+**Tecnologías**: Gmail, Google Calendar, OpenAI, Google Sheets  
+**Funcionalidades**:
+- Extrae información clave de CVs.
+- Evalúa candidatos según criterios definidos.
+- Genera correos automáticos según resultado (apto/no apto).
+- Agenda entrevistas y actualiza la base de datos.  
+**Captura del agente**:  
+![image](https://github.com/user-attachments/assets/c5292a55-a829-43f6-b194-218ee89e16c5)
 
 ---
 
-### 4. 📅 OfficeAssist AI
-- **Objetivo**: Asistencia administrativa automatizada.
-- **Funcionalidad**:
-  - Lectura de emails y extracción de citas.
-  - Agendado automático en Google Calendar.
-  - Envío de confirmaciones/resúmenes.
-- **Tecnologías**: n8n, Google Calendar, OpenAI API
+### 📣 MarketingWise AI
+**Objetivo**: Generar y publicar contenido en redes sociales automáticamente.  
+**Tecnologías**: OpenAI, Gmail, APIs sociales (LinkedIn, Instagram, Facebook, X)  
+**Funcionalidades**:
+- Generación automática de contenido adaptado por plataforma.
+- Aprobación previa vía email (opcional).
+- Publicación multicanal en redes sociales.
+- Integración con formularios y carga de imágenes.  
+**Captura del agente**:  
+![image](https://github.com/user-attachments/assets/9d8a5037-6334-4979-ad9c-d2a3eefe8114)
 
 ---
 
-### 5. 🧑‍💼 TalentBot
-- **Objetivo**: Automatización del proceso de selección.
-- **Funcionalidad**:
-  - Clasifica CVs según requisitos.
-  - Propone entrevistas.
-  - Publica ofertas de trabajo.
-- **Tecnologías**: n8n, Airtable, OpenAI API, Gmail API
+### 🧮 FinanceFlow
+**Objetivo**: Automatización de procesos contables.  
+**Tecnologías**: OpenAI, Google Sheets, Gmail, Telegram  
+**Funcionalidades**:
+- Registra ingresos y gastos automáticamente.
+- Envía facturas por correo.
+- Alerta de pagos vencidos o ingresos esperados.
+- Genera reportes bajo demanda por texto.  
+**Captura del agente**:  
+![image](https://github.com/user-attachments/assets/6930fc4a-50b1-4eeb-b3b0-ebf071c706c1)
 
 ---
 
-## 🗂️ Estructura del repositorio
+### 📊 DataInsight AI
+**Objetivo**: Análisis de datos en lenguaje natural.  
+**Tecnologías**: OpenAI, Google Sheets, Telegram  
+**Funcionalidades**:
+- Realiza análisis sobre hojas de datos.
+- Responde preguntas como “¿cuál fue el producto más vendido?”
+- Informa tendencias, outliers y estadísticas claves.  
+**Captura del agente**:  
+![image](https://github.com/user-attachments/assets/696ce08d-d3a5-4fac-8163-84916e2aa051)
+
+---
+
+### 📜 LegalAssist AI
+**Objetivo**: Revisión de contratos y asesoría legal automatizada.  
+**Tecnologías**: OpenAI, Telegram, PDF Tools  
+**Funcionalidades**:
+- Analiza contratos en PDF o texto y detecta riesgos.
+- Responde preguntas legales en lenguaje natural.
+- Entrega resúmenes claros y directos para no-abogados.  
+**Captura del agente**:  
+![image](https://github.com/user-attachments/assets/56ee9fef-f253-4068-841c-f0fdcdc0d802)
+
+---
+
+### 🧠 Agente Total
+**Objetivo**: Asistente IA completo multicanal y multitarea.  
+**Tecnologías**: Telegram, OpenAI (GPT + Whisper), Gmail, Calendar, LangChain Tools  
+**Funcionalidades**:
+- Procesa texto y voz en Telegram.
+- Accede a herramientas como calendario, correo, web y redes.
+- Actúa como un verdadero "copiloto" personal y profesional.  
+**Captura del agente**:  
+![image](https://github.com/user-attachments/assets/ae6ab798-90b7-48c0-a28c-dd032d63ad71)
+
 
