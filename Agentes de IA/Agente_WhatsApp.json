@@ -1,0 +1,749 @@
+{
+  "name": "Agente WhatsApp",
+  "nodes": [
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {}
+      },
+      "id": "3974cb89-e05f-48c5-acb3-aebc4def7161",
+      "name": "Download Audio",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        20,
+        340
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "updates": [
+          "messages"
+        ],
+        "options": {}
+      },
+      "id": "d32133e5-2be0-452f-b62a-64a6c577399c",
+      "name": "WhatsApp Trigger1",
+      "type": "n8n-nodes-base.whatsAppTrigger",
+      "position": [
+        -900,
+        420
+      ],
+      "webhookId": "0b1b3a9b-2f6a-4f5a-8385-6365d96f4802",
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "d0929078-001c-4f6d-be05-80112926418a",
+                    "leftValue": "={{ $json.type == 'image' && Boolean($json.image) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "IMAGEN"
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 2
+                },
+                "conditions": [
+                  {
+                    "id": "de238e75-95ba-448d-8c66-1177b3851439",
+                    "leftValue": "={{ $json.type == 'audio' && Boolean($json.audio) }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "boolean",
+                      "operation": "true",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true,
+              "outputKey": "AUDIO"
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra",
+          "renameFallbackOutput": "TEXTO"
+        }
+      },
+      "id": "e011fefe-be9e-42b3-abb3-fcd4b854e194",
+      "name": "Identifica el tipo de mensaje",
+      "type": "n8n-nodes-base.switch",
+      "position": [
+        -460,
+        520
+      ],
+      "typeVersion": 3.2
+    },
+    {
+      "parameters": {
+        "fieldToSplitOut": "messages",
+        "options": {}
+      },
+      "id": "f3f53430-a3e6-4123-9089-9eec7324f535",
+      "name": "Separador del mensaje",
+      "type": "n8n-nodes-base.splitOut",
+      "position": [
+        -680,
+        520
+      ],
+      "typeVersion": 1
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.audio.id }}"
+      },
+      "id": "d32e1420-6ae8-4ccc-b166-2cdbf226d2d0",
+      "name": "Link del audio",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        -180,
+        360
+      ],
+      "typeVersion": 1,
+      "webhookId": "c4435d83-b0fb-4273-ab24-d5a193da1a05"
+    },
+    {
+      "parameters": {
+        "resource": "audio",
+        "operation": "transcribe",
+        "options": {}
+      },
+      "id": "eb7683d9-34e3-43cb-8551-ac370c637d75",
+      "name": "Transcripción del audio",
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "position": [
+        240,
+        340
+      ],
+      "typeVersion": 1.5
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=El usuario envió el siguiente mensaje:\ntipo de mensaje : {{ $json.type }} y petición: {{ $json.text }}",
+        "options": {
+          "systemMessage": "=Eres un asistente personal eficiente e inteligente, encargado de gestionar eventos de calendario, correos electrónicos y tareas de comunicación de manera fluida. Tus respuestas deben ser naturales y cercanas, evitando un tono robótico.\n\nPara la gestión de calendario:\n\nRecupera eventos utilizando la herramienta \"eventos_calendario\". Si hay eventos programados, responde de manera clara y concisa, por ejemplo:\n\n\"Tienes una reunión con el equipo a las 10:00 AM en la oficina. También tienes una presentación al cliente a las 3:00 PM por Zoom. ¿Necesitas más detalles?\"\nSi no hay eventos, informa al usuario de manera útil: \"Parece que hoy tienes el día libre. Si necesitas agendar algo, dime y lo hago en un momento.\"\nSi el usuario te lo pide, para crear eventos en el calendario, usa la herramienta \"crea_eventos\". Si la información proporcionada es suficiente, confirma directamente:\n\n\"Listo, he programado la reunión con Mateo el miércoles a las 4 PM. Ya está en tu calendario.\"\nSolo solicita más detalles si falta información clave o si hay un error técnico. Solo confirmas si se crea correctamente!\nPara la gestión de correos electrónicos:\n\nUtiliza la herramienta \"recibe_multiples_correos\" para obtener los correos recientes y responde con un resumen conciso.\n\n\"Aquí tienes los correos de hoy. Sarah Thompson: 'Propuesta de colaboración' – Quiere discutir un proyecto la próxima semana. Emily White: 'Confirmación de reunión' – La reunión de mañana está confirmada, pero pide detalles de la agenda.\"\nSi no hay correos nuevos, responde: \"No encontré nuevos correos en ese período. Si crees que falta algo, dime y reviso de nuevo.\"\nPara enviar correos, usa la herramienta \"crea y aprueba correo\". Mantén un tono conversacional:\n\n\"Genial, ya le envié un correo a John para coordinar la reunión. Te aviso si responde.\"\nSi falta información, pregunta solo lo necesario: \"¿Quieres que le proponga una fecha específica o que él elija?\"\nPara la gestión de contactos:\n\nUsa la herramienta \"conseguir_clientes\" para encontrar direcciones de correo.\nSi un nombre no está en la base de datos, pregunta: \"No encontré el email de Sarah en la lista. ¿Quieres que lo busque en tus contactos o lo agregamos?\"\nSi hay varias coincidencias, solicita aclaración: \"Tengo dos personas llamadas 'Carlos' en tus contactos: Carlos Pérez y Carlos Ramírez. ¿A cuál te refieres?\"\nPara el manejo de archivos:\n\nSi el usuario solicita guardar una foto, usa la herramienta \"drive\" para almacenarla.\nSi necesita guardar uno o varios contactos, almacénalos en el formato:\n{nombre: \"nombre\", mail: \"mail\", telefono: \"telefono\"}\nAntes de enviar un correo, usa la herramienta \"conseguir_clientes\" para obtener la dirección de correo correcta.\nManeja correctamente la temporalidad en las respuestas. Ten en cuenta que la hora actual es {{ new Date() }} y responde adecuadamente a conceptos como antes, ahora, después o mañana. Evita confirmaciones innecesarias y menciona errores técnicos solo cuando realmente ocurran.\n\nSi el usuario quiere consultar en la base de datos el inventario, usa \"inventario\" y devuelvele la información que te pida el usuario únicamnete. La estructura de la BD ES: CREATE TABLE Inventory2 (\n    ID SERIAL PRIMARY KEY,\n    \"product.partNumber\" TEXT,\n    \"location.locationIdentifier\" TEXT,\n    \"inventoryType\" TEXT,\n    \"quantity\" INTEGER,\n    \"quantityUnits\" TEXT,\n    \"value\" NUMERIC(10,2),\n    \"valueCurrency\" TEXT,\n    \"reservationOrders\" INTEGER,\n    \"daysOfSupply\" INTEGER,\n    \"shelfLife\" INTEGER,\n    \"quantityUpperThreshold\" INTEGER,\n    \"quantityLowerThreshold\" INTEGER,\n    \"daysOfSupplyUpperThreshold\" INTEGER,\n    \"daysOfSupplyLowerThreshold\" INTEGER,\n    \"expiringThreshold\" NUMERIC(10,2) NULL,\n    \"reorderLevel\" INTEGER,\n    \"expectedLeadTime\" INTEGER,\n    \"plannerCode\" TEXT,\n    \"velocityCode\" TEXT,\n    \"inventoryParentType\" TEXT,\n    \"class\" TEXT,\n    \"segment\" TEXT\n);\n"
+        }
+      },
+      "id": "329511c4-ab32-4684-bb95-8a4ecfd7abc6",
+      "name": "AiLink asistente.",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "position": [
+        740,
+        440
+      ],
+      "typeVersion": 1.6
+    },
+    {
+      "parameters": {
+        "operation": "send",
+        "phoneNumberId": "564135173440240",
+        "recipientPhoneNumber": "={{ $('WhatsApp Trigger1').item.json.messages[0].from }}",
+        "textBody": "={{ $json.output }}",
+        "additionalFields": {}
+      },
+      "id": "30047422-cba4-4099-a4ba-013735916e10",
+      "name": "Responde al usuario con texto",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        1180,
+        400
+      ],
+      "typeVersion": 1,
+      "executeOnce": true,
+      "webhookId": "1f28d35d-9896-4183-bac5-d08480c24551"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Úsalo cuando el usuario quiera enviar un correo a una dirección dada.",
+        "sendTo": "={{ $fromAI('email_send_to', 'El destinatario del correo', 'string') }}",
+        "subject": "={{ $fromAI('email_subject', 'El asunto del correo', 'string') }}",
+        "emailType": "text",
+        "message": "={{ $fromAI('email_content', 'El contenido del mensaje de correo', 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "id": "9a69e84b-7947-409e-9d60-a3ad0251bb27",
+      "name": "crea y aprueba correo",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1400,
+        760
+      ],
+      "webhookId": "83bbb034-9202-415a-a146-0952b3716c6e",
+      "notesInFlow": false
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1LIhNXNNskTwHuYTq2mgX_T25GXqdtnJmguH-xLU7_9g",
+          "mode": "list",
+          "cachedResultName": "CONTACTOS CLIENTES ",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LIhNXNNskTwHuYTq2mgX_T25GXqdtnJmguH-xLU7_9g/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "gid=0",
+          "mode": "list",
+          "cachedResultName": "Hoja 1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1LIhNXNNskTwHuYTq2mgX_T25GXqdtnJmguH-xLU7_9g/edit#gid=0"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        780,
+        860
+      ],
+      "id": "077fbed1-9be8-413a-ba16-ec6cb531ac5d",
+      "name": "conseguir_clientes"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('WhatsApp Trigger1').item.json.contacts[0].wa_id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryPostgresChat",
+      "typeVersion": 1.3,
+      "position": [
+        440,
+        840
+      ],
+      "id": "60692b56-a2ba-46be-b899-98ee86edbef4",
+      "name": "Memoria"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usar cuando el usuario quiera obtener uno o varios eventos. Consultar según la indicación del usuario.",
+        "operation": "getAll",
+        "calendar": {
+          "__rl": true,
+          "value": "ae0d18b15a702c63489b38477cb3c685b00f5d4355568ff567e9bcb9737c287e@group.calendar.google.com",
+          "mode": "list",
+          "cachedResultName": "MiAgenda_Whatsap"
+        },
+        "options": {}
+      },
+      "id": "5b242612-52a7-4eb6-9b4e-50c1e7779892",
+      "name": "eventos_calendario",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        640,
+        880
+      ]
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Úsalo para recuperar correos electrónicos según la indicación del usuario.",
+        "operation": "getAll",
+        "limit": "={{ $fromAI('limit', 'el número de correos a recuperar, máximo de 3') }}",
+        "simple": false,
+        "filters": {
+          "readStatus": "unread",
+          "receivedAfter": "={{ $fromAI('received_after', 'Recuperar correos recibidos después de la fecha actual, según el período especificado por el usuario si lo hay. Esto se calcula dinámicamente en función de la fecha actual.', 'string') }}",
+          "receivedBefore": "={{ $fromAI('received_before', 'Recuperar correos recibidos antes de la hora actual de hoy. Esto se calcula dinámicamente en función de la fecha actual.', 'string') }}"
+        },
+        "options": {}
+      },
+      "id": "e2b6179e-d6b8-4c9f-beb4-4ca7da4541d7",
+      "name": "recibe_multiples_correos",
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1240,
+        820
+      ],
+      "webhookId": "ee66615f-8ca6-4b86-bb55-56b1d30bb388"
+    },
+    {
+      "parameters": {
+        "descriptionType": "manual",
+        "toolDescription": "Usala cuando el usuario solicite crear o generar un evento a la hora indicada",
+        "calendar": {
+          "__rl": true,
+          "value": "ailinkyt@gmail.com",
+          "mode": "list",
+          "cachedResultName": "ailinkyt@gmail.com"
+        },
+        "start": "={{ $fromAI('start_date', 'La hora de inicio del evento en formato ISO', 'string') }}",
+        "end": "={{ $fromAI('end_date', 'The end time of the event in ISO format', 'string') }}",
+        "additionalFields": {
+          "attendees": [],
+          "description": "={{ $fromAI('description', 'Detalles o agenda del evento', 'string') }}",
+          "summary": "={{ $fromAI('title', 'Especifica el título del evento', 'string') }}"
+        }
+      },
+      "id": "737be5f0-ca00-4fec-a9cd-02829ced216a",
+      "name": "crea_eventos",
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.2,
+      "position": [
+        1080,
+        840
+      ]
+    },
+    {
+      "parameters": {
+        "resource": "media",
+        "operation": "mediaUrlGet",
+        "mediaGetId": "={{ $json.image.id }}"
+      },
+      "id": "a50ea799-e2ba-4728-aa97-cda034285510",
+      "name": "URL IMAGEN",
+      "type": "n8n-nodes-base.whatsApp",
+      "position": [
+        -240,
+        20
+      ],
+      "typeVersion": 1,
+      "webhookId": "0e4b89b0-bced-465b-ab85-d73f238151df"
+    },
+    {
+      "parameters": {
+        "url": "={{ $json.url }}",
+        "authentication": "predefinedCredentialType",
+        "nodeCredentialType": "whatsAppApi",
+        "options": {}
+      },
+      "id": "cc480daa-0342-449a-9bd5-99f13087b3de",
+      "name": "Download Image",
+      "type": "n8n-nodes-base.httpRequest",
+      "position": [
+        0,
+        0
+      ],
+      "typeVersion": 4.2
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres un agente que da una descripción muy precisa de la imagen en cuestión. Muy preciso. ",
+        "messages": {
+          "messageValues": [
+            {
+              "type": "HumanMessagePromptTemplate",
+              "messageType": "imageBinary"
+            }
+          ]
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.chainLlm",
+      "typeVersion": 1.5,
+      "position": [
+        180,
+        20
+      ],
+      "id": "5ef46dd2-8c57-4b79-adf2-961140142b53",
+      "name": "Basic LLM Chain"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-2024-11-20",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-2024-11-20"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        180,
+        200
+      ],
+      "id": "da5ad341-59ef-4221-941e-34fe25b20574",
+      "name": "OpenAI Chat Model"
+    },
+    {
+      "parameters": {
+        "operation": "select",
+        "schema": {
+          "__rl": true,
+          "value": "public",
+          "mode": "list",
+          "cachedResultName": "public"
+        },
+        "table": {
+          "__rl": true,
+          "value": "inventory2",
+          "mode": "list",
+          "cachedResultName": "inventory2"
+        },
+        "limit": 10,
+        "options": {}
+      },
+      "type": "n8n-nodes-base.postgresTool",
+      "typeVersion": 2.5,
+      "position": [
+        960,
+        840
+      ],
+      "id": "a54ef7cc-9b0a-4b90-8056-4aa56ff86e73",
+      "name": "inventario"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4o-2024-11-20",
+          "mode": "list",
+          "cachedResultName": "gpt-4o-2024-11-20"
+        },
+        "options": {
+          "frequencyPenalty": 0,
+          "temperature": 0.2
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        260,
+        800
+      ],
+      "id": "bff80c46-4876-4015-b656-a147f0bae8a5",
+      "name": "OpenAI Chat Model1"
+    },
+    {
+      "parameters": {
+        "amount": 1
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        -120,
+        600
+      ],
+      "id": "f78cfaf6-3018-49b3-afa7-079fbf9d4269",
+      "name": "Wait",
+      "webhookId": "65ccd36c-69d1-4857-aa08-5ae84ec01ed2"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "82027dff-3114-44bd-9dda-b1814eef6c8d",
+              "name": "type",
+              "value": "={{ $('Identifica el tipo de mensaje').item.json.type }}",
+              "type": "string"
+            },
+            {
+              "id": "30b5a785-25e8-4015-8b0b-573017d33b7e",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        540,
+        440
+      ],
+      "id": "81d835c0-3617-4e80-9b03-9df64695f817",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Download Audio": {
+      "main": [
+        [
+          {
+            "node": "Transcripción del audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "WhatsApp Trigger1": {
+      "main": [
+        [
+          {
+            "node": "Separador del mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Identifica el tipo de mensaje": {
+      "main": [
+        [
+          {
+            "node": "URL IMAGEN",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Link del audio",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Separador del mensaje": {
+      "main": [
+        [
+          {
+            "node": "Identifica el tipo de mensaje",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Link del audio": {
+      "main": [
+        [
+          {
+            "node": "Download Audio",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Transcripción del audio": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AiLink asistente.": {
+      "main": [
+        [
+          {
+            "node": "Responde al usuario con texto",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crea y aprueba correo": {
+      "ai_tool": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "conseguir_clientes": {
+      "ai_tool": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Memoria": {
+      "ai_memory": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "eventos_calendario": {
+      "ai_tool": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "recibe_multiples_correos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "crea_eventos": {
+      "ai_tool": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "URL IMAGEN": {
+      "main": [
+        [
+          {
+            "node": "Download Image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Download Image": {
+      "main": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "Basic LLM Chain",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Basic LLM Chain": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "inventario": {
+      "ai_tool": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model1": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Edit Fields": {
+      "main": [
+        [
+          {
+            "node": "AiLink asistente.",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "bb1ba393-9545-48dc-96e0-8d27f987c2a3",
+  "meta": {
+    "instanceId": "e0b56e68b804c12294ee75f8fc07d0556304fe5992fedc6d0ec01ac0c5cf1b66"
+  },
+  "id": "iw2kfslrGUYjPzl9",
+  "tags": []
+}

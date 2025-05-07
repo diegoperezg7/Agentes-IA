@@ -1,0 +1,566 @@
+{
+  "name": "Agente RRHH",
+  "nodes": [
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1",
+        "contextWindowLength": 15
+      },
+      "id": "603cc25c-6b9b-4d19-a3e0-cf4405707935",
+      "name": "Simple Memory",
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1200,
+        440
+      ]
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1-mini",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1-mini"
+        },
+        "options": {}
+      },
+      "id": "616731c6-1c97-42a0-aa18-531b604a06dc",
+      "name": "OpenAI Chat Model",
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        1060,
+        440
+      ],
+      "credentials": {
+        "openAiApi": {
+          "id": "OISI3zpeZVJDfFSd",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=Eres TalentBot, el agente de RRHH inteligente de NeuraX.\n\nTu misión es analizar automáticamente los currículums recibidos, extraer información clave, verificar si el perfil cumple con los criterios definidos y actuar en consecuencia: almacenar, rechazar o agendar entrevista.\n\nEl puesto al que van aplicar los candidatos es el de Administrador de Sistemas Informáticos en Red, asi que evalúalos en base a ese puesto.\n\nEste proceso debe ejecutarse con rapidez, precisión y orientación a resultados, siguiendo el enfoque de NeuraX: optimizar el tiempo y maximizar la eficiencia.\n\n🔍 Flujo de Acción del Agente\n1. Análisis del Currículum\nRecibes el contenido de un currículum en texto plano:\n{{ $json.text }}\nY metadatos disponibles del archivo, como:\n\nNombre estimado: {{ $json.info.Author }}\n\nTu tarea es extraer los siguientes datos clave del texto recibido:\n\nNombre completo (si no aparece, usa $json.info.Author)\n\nCorreo electrónico (si está disponible)\n\nCiudad/País de residencia\n\nIdiomas (y nivel)\n\nAños de experiencia profesional\n\nEstudios o formación\n\nConocimientos técnicos\n\nHerramientas que domina (Make, n8n, Python, IA, automatización)\n\nExperiencia previa en automatización / IA (si aplica)\n\nPerfil de LinkedIn (si aparece en el texto)\n\n2. Verificación de Aptitud\nEvalúa si el perfil es adecuado según estos criterios generales siendo apto o no apto, y añadiendo una nota del 0 al 10 según como se adapte su perfil al puesto:\n\nExperiencia mínima: al menos 1 año en entornos relacionados con automatización, tecnología o IA.\n\nHabilidades clave: conocimientos en herramientas no-code (Make, Zapier, n8n), o lenguajes como Python.\n\nIdiomas: mínimo español fluido; inglés es valorado.\n\nSoft Skills: proactividad, adaptabilidad, capacidad de aprendizaje (si pueden inferirse del texto).\n\nEXCEPCIÓN IMPORTANTE:\n\nSi la persona menciona que aplica a un puesto informático o declara ser informático, programador, desarrollador, técnico IT, ingeniero de software, automatizador, etc., debe ser considerado automáticamente como APTO, incluso si no cumple con todos los demás criterios.\n\n3. Toma de Decisión y Salida Esperada\nDevuelve un objeto con esta estructura:\n\n\"nombre\": nombre completo del candidato\n\n\"email\": correo del candidato (si está disponible)\n\n\"aptitud\": true o false\n\n\"mensaje\": correo redactado para Gmail (según resultado)\n\n\"evento\" (solo si apto):\n\n\"titulo\": \"Entrevista con [Nombre]\"\n\n\"fecha\": fecha y hora sugerida\n\n\"duracion\": en minutos (por defecto, 30)\n\n\"nota\": \"Primera entrevista con candidato [Nombre] para posición [rol identificado]\"\n\n4. Almacenar datos en Google sheets:\nPrimero revisa en la hoja de google sheets si ya esta el candidato registrado, en tal caso no lo registres y envíale un email avisando de ello. Si no ocurre ese caso, almacena los datos obtenidos, que sigan la siguiente estructura en la hoja segun estas columnas.\nFecha: {{ $json.headers.date }}\nNombre: {{ $json.from.value[0].name }}\nEmail: {{ $json.from.value[0].address }}\nPuesto: Administrador de Sistemas Informáticos en Red\nEvaluacion (Apto o NO Apto)\nNota (del 0 al 10)\nResumen Perfil: (Escribe un breve resumen acerca del candidato y en caso de que sea apto añade que puede aportar a la empresa según su curriculum)\n\n\n✉️ Recomendaciones para los Correos\n📩 Si es apto:\nAsunto: Confirmación de Entrevista – Proceso de Selección NeuraX\n\nHola [Nombre del candidato],\n\nGracias por postularte para formar parte de NeuraX. Tras revisar tu perfil, nos gustaría invitarte a una entrevista para conocerte mejor y explorar posibles oportunidades contigo.\n\nHemos programado una reunión en el siguiente horario:\n🗓 Fecha y hora: [fecha definida]\n📍 Modalidad: Online (enlace al final del correo)\n\nPor favor, confirma tu disponibilidad respondiendo a este mensaje.\n\n¡Nos alegra que estés interesado en formar parte del futuro de la automatización con NeuraX!\n\nSaludos cordiales,\nEquipo NeuraX\n\n❌ Si no es apto:\nAsunto: Gracias por postularte a NeuraX\n\nHola [Nombre del candidato],\n\nGracias por haberte postulado a una posición en NeuraX. Hemos revisado tu perfil cuidadosamente, pero en esta ocasión, hemos decidido continuar con otros candidatos que se ajustan más al perfil que buscamos actualmente.\n\nAgradecemos tu interés y te animamos a aplicar en futuras oportunidades.\n\nTe deseamos mucho éxito en tus proyectos profesionales.\n\nAtentamente,\nEquipo NeuraX\n\n📌 Consideraciones Finales\nNo muestres al candidato que fue clasificado como “no apto”.\n\nEl análisis debe ser justo, preciso y libre de sesgos.\n\nResalta siempre la propuesta de valor de NeuraX: eficiencia, automatización y futuro digital.\n\nAutomatiza todo el proceso de principio a fin, sin intervención humana, salvo excepciones.\n\nRecuerda, la fecha actual es {{ $now }}\nRegistra en la hoja de google sheets la fecha del correo {{ $('Gmail Trigger').item.json.headers.date }}\n\nEn el caso de que el candidato sea apto, revisa la disponibilidad en el calendario para agendar la entrevista dentro de 5 días a partir de {{ $now }}, en día laboral con horario 9-17h. Si no hubiese disponibilidad durantes esas fechas, comprobar la disponibilidad para los días siguentes y elegir unos de esos. Y elige un buen nombre para el evento de la entrevista.\n\nUna vez hayas visto el correo recibido marcalo como leído.\nAdjunta en el correo enviado al candidato el link creado en google meets, al agendar la entrevista en el calendar, además de ponerle nombre al evento en google calendar.\n\nFinalmente, usa la herramiente de telegram para enviar un mensaje al encargado de recursos humanos, con un pequeño resumen del candidato y de las acciones realizadas.\n\nEn el caso de que llegue una respuesta del candidato a través del trigger de reply de gmail, marcarás como Confirmado en la casilla de la columna estado.",
+        "options": {}
+      },
+      "id": "e4c30f1d-58b2-4248-adc2-f9eae0a38dd6",
+      "name": "AI Agent",
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        1100,
+        220
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1O5W7i8tZxnOOecp35kz5QD2r7tKN9zgA4_f2VpGzhsY",
+          "mode": "list",
+          "cachedResultName": "Candidatos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1O5W7i8tZxnOOecp35kz5QD2r7tKN9zgA4_f2VpGzhsY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1566029776,
+          "mode": "list",
+          "cachedResultName": "Hoja 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1O5W7i8tZxnOOecp35kz5QD2r7tKN9zgA4_f2VpGzhsY/edit#gid=1566029776"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha', ``, 'string') }}",
+            "Nombre": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nombre', ``, 'string') }}",
+            "Email": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Email', ``, 'string') }}",
+            "Puesto": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Puesto', ``, 'string') }}",
+            "Evaluacion": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Evaluacion', ``, 'string') }}",
+            "Nota": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Nota', ``, 'string') }}",
+            "Resumen Perfil": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Resumen_Perfil', `Breve resumen del candidato`, 'string') }}",
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', `Enviado (si se ha contactado con el candidato para una entrevista) o Confirmado (si el candidato ha respondido aceptando la entrevista)`, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nombre",
+              "displayName": "Nombre",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Email",
+              "displayName": "Email",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Puesto",
+              "displayName": "Puesto",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Evaluacion",
+              "displayName": "Evaluacion",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Nota",
+              "displayName": "Nota",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Resumen Perfil",
+              "displayName": "Resumen Perfil",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        1800,
+        520
+      ],
+      "id": "ef6861d8-065e-449c-8e6a-598ceca7917d",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jzdxqTTFKKi6JSME",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "={{ $('Gmail Trigger').item.json.from.value[0].address }}",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1800,
+        180
+      ],
+      "id": "cee7e6b4-a90a-4ef0-9ae9-a62cd78abecc",
+      "name": "Gmail",
+      "webhookId": "e084dc33-50de-4519-98d8-bd6c6b69e4eb",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "txeTeHg58ptCfUHh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "calendar": {
+          "__rl": true,
+          "value": "agencianeurax@gmail.com",
+          "mode": "list",
+          "cachedResultName": "agencianeurax@gmail.com"
+        },
+        "start": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start', ``, 'string') }}",
+        "end": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End', ``, 'string') }}",
+        "useDefaultReminders": false,
+        "additionalFields": {
+          "attendees": [
+            "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Attendees', ``, 'string') }}"
+          ],
+          "conferenceDataUi": {
+            "conferenceDataValues": {
+              "conferenceSolution": "hangoutsMeet"
+            }
+          },
+          "summary": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Summary', `Título del evento`, 'string') }}"
+        }
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1800,
+        340
+      ],
+      "id": "2a3c9f29-a691-4d10-a939-beae6d3b78dc",
+      "name": "Google Calendar",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "yFLQw3Fyq9wmAa2H",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "pdf",
+        "binaryPropertyName": "attachment_0",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.extractFromFile",
+      "typeVersion": 1,
+      "position": [
+        900,
+        100
+      ],
+      "id": "dd7375d5-0a89-41a5-b741-cf45fb16220a",
+      "name": "Extract from File"
+    },
+    {
+      "parameters": {
+        "pollTimes": {
+          "item": [
+            {
+              "mode": "everyMinute"
+            }
+          ]
+        },
+        "simple": false,
+        "filters": {},
+        "options": {
+          "downloadAttachments": true
+        }
+      },
+      "type": "n8n-nodes-base.gmailTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        700,
+        220
+      ],
+      "id": "4c3486b3-0ae9-4bfe-a50c-c497051b6a00",
+      "name": "Gmail Trigger",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "txeTeHg58ptCfUHh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "operation": "markAsRead",
+        "messageId": "={{ $('Gmail Trigger').item.json.id }}"
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        1640,
+        180
+      ],
+      "id": "bea0b847-5b21-4dd7-8001-2d2736c0b83d",
+      "name": "Gmail1",
+      "webhookId": "a8a26b3e-4031-47cb-b13d-fd2440aa7a05",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "txeTeHg58ptCfUHh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "resource": "calendar",
+        "calendar": {
+          "__rl": true,
+          "value": "agencianeurax@gmail.com",
+          "mode": "list",
+          "cachedResultName": "agencianeurax@gmail.com"
+        },
+        "timeMin": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Time', ``, 'string') }}",
+        "timeMax": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('End_Time', ``, 'string') }}",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleCalendarTool",
+      "typeVersion": 1.3,
+      "position": [
+        1640,
+        340
+      ],
+      "id": "237fce53-96e0-4781-a9fb-e9f4d61f363f",
+      "name": "Google Calendar1",
+      "credentials": {
+        "googleCalendarOAuth2Api": {
+          "id": "yFLQw3Fyq9wmAa2H",
+          "name": "Google Calendar account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "7460408421",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', `Escribe un mensaje al encargado de recursos humanos con un breve resumen del candidato y de las acciones realizadas`, 'string') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        1640,
+        0
+      ],
+      "id": "5df18ed7-e718-4cb3-89d9-41e998dae6d6",
+      "name": "Telegram",
+      "webhookId": "1b479b28-d4b6-484b-9245-1987c1c3d3f6",
+      "credentials": {
+        "telegramApi": {
+          "id": "SYGpqFnQJBGH10JB",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1O5W7i8tZxnOOecp35kz5QD2r7tKN9zgA4_f2VpGzhsY",
+          "mode": "list",
+          "cachedResultName": "Candidatos",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1O5W7i8tZxnOOecp35kz5QD2r7tKN9zgA4_f2VpGzhsY/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 1566029776,
+          "mode": "list",
+          "cachedResultName": "Hoja 2",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1O5W7i8tZxnOOecp35kz5QD2r7tKN9zgA4_f2VpGzhsY/edit#gid=1566029776"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        1640,
+        520
+      ],
+      "id": "3fc34f1b-1618-4c87-870a-ab3a5e945c9a",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jzdxqTTFKKi6JSME",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Use the tool to think about something complex\n"
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        1340,
+        440
+      ],
+      "id": "6690afbb-4b0b-45cb-bb78-20df2204a6f6",
+      "name": "Think"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Extract from File": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail Trigger": {
+      "main": [
+        [
+          {
+            "node": "Extract from File",
+            "type": "main",
+            "index": 0
+          },
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Calendar1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "6ba8aaab-f8a5-432e-b084-7cd0bf79157e",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e0b56e68b804c12294ee75f8fc07d0556304fe5992fedc6d0ec01ac0c5cf1b66"
+  },
+  "id": "d3bX6bjYwQZXfExn",
+  "tags": []
+}

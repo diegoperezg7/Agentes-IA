@@ -1,0 +1,485 @@
+{
+  "name": "Agente FinanceFlow",
+  "nodes": [
+    {
+      "parameters": {
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.chatTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        180,
+        0
+      ],
+      "id": "5923be3e-b512-4fbd-9f97-ccdf6b3261cb",
+      "name": "When chat message received",
+      "webhookId": "58c62ffa-2e84-4c1b-b580-142dd505738c"
+    },
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "=You are FinanceFlow, the intelligent finance automation agent from NeuraX.\nYou recieved messages {{ $json.chatInput }} and answer to them.\nYou act as a smart, professional chatbot specialized in financial operations.\nYou understand and process messages about business transactions, extract the necessary data, and take action automatically.\n\nYou also support natural financial queries (e.g., summaries, reports, pending payments) using your connected tools.\n\n🛠 Tools you have access to:\nThink: for reasoning and extracting structured data\n\nGoogle Sheets: to append or read transaction records, update rowws or delete rows.\n\nTelegram: to send alerts when a payment is overdue\n\nGmail: to send formal notifications or reports\n\nCalculator: to calculate if it's necesary\n\n🧾 Your Two Core Functions:\n1. Transaction registration\nWhen the user sends messages like:\n\n\"Pago a Zapier 35€ por automatización, vence en 15 días\"\n\nYou must:\n\nExtract fields:\n\nTipo, Categoría, Cliente/Proveedor, Descripción, Monto, Estado, Fecha, Fecha Vencimiento, Método de pago, ID\n\nAppend the data to Google Sheets\n\nIf it’s a pending Gasto and already overdue → send an alert via Telegram or Email\n\nRespond in natural, human language. For example:\n\n“He registrado el gasto de 35€ a Zapier. Te avisaré si vence sin pagar.”\n\n2. Financial queries\nIf the user asks:\n\n“¿Qué gastos tuvimos este mes?”\n\n“¿Cuánto hemos ingresado esta semana?”\n\n“¿Qué pagos están pendientes?”\n\nYou must:\n\nUse Google Sheets (read) to filter and analyze the data\n\nSummarize the response clearly, e.g.:\n\n“En abril registraste 6 gastos por un total de 1.280€. Los principales fueron OpenAI, AWS y Meta.”\n\n🧠 Behavior:\nBe conversational and natural, like a human assistant\n\nOnly show structured JSON if explicitly requested (e.g., “muéstrame los datos”)\n\nIf data is unclear or incomplete, ask:\n\n“¿Cuál es la fecha de vencimiento del gasto?”\n\nAlways act silently unless a message to the user is required\n\nConfirm actions with short, natural responses\n\nAsk for clarification only if the date or type is unclear.\n\nThe date is {{ $now }}",
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 1.8,
+      "position": [
+        572,
+        0
+      ],
+      "id": "a3e6d37c-ea99-408d-bab5-79d89aed14d5",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "value": "gpt-4.1",
+          "mode": "list",
+          "cachedResultName": "gpt-4.1"
+        },
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.2,
+      "position": [
+        180,
+        220
+      ],
+      "id": "56aca140-8320-4866-a6cb-27c6842c8278",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "OISI3zpeZVJDfFSd",
+          "name": "OpenAi account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolThink",
+      "typeVersion": 1,
+      "position": [
+        420,
+        220
+      ],
+      "id": "cb5b1da5-503b-4539-a9a8-7493436f57a4",
+      "name": "Think"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "1",
+        "contextWindowLength": 20
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        300,
+        220
+      ],
+      "id": "68afe325-ea60-49c1-948d-3c833d73262a",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "operation": "appendOrUpdate",
+        "documentId": {
+          "__rl": true,
+          "value": "1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ",
+          "mode": "list",
+          "cachedResultName": "FinanceFlow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 471698859,
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ/edit#gid=471698859"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "Fecha": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha', ``, 'string') }}",
+            "Tipo": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Tipo', ``, 'string') }}",
+            "Categoría": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Categor_a', ``, 'string') }}",
+            "Cliente / Proveedor": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Cliente___Proveedor', ``, 'string') }}",
+            "Descripción": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Descripci_n', ``, 'string') }}",
+            "Monto (€)": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Monto____', ``, 'string') }}",
+            "Estado": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Estado', ``, 'string') }}",
+            "Fecha Vencimiento": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Fecha_Vencimiento', ``, 'string') }}",
+            "Método de pago": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('M_todo_de_pago', ``, 'string') }}",
+            "ID": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('ID', `Debe ser único y nunca repetirse`, 'string') }}"
+          },
+          "matchingColumns": [
+            "ID"
+          ],
+          "schema": [
+            {
+              "id": "Fecha",
+              "displayName": "Fecha",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Tipo",
+              "displayName": "Tipo",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Categoría",
+              "displayName": "Categoría",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Cliente / Proveedor",
+              "displayName": "Cliente / Proveedor",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Descripción",
+              "displayName": "Descripción",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Monto (€)",
+              "displayName": "Monto (€)",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Estado",
+              "displayName": "Estado",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Fecha Vencimiento",
+              "displayName": "Fecha Vencimiento",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "Método de pago",
+              "displayName": "Método de pago",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true
+            },
+            {
+              "id": "ID",
+              "displayName": "ID",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "canBeUsedToMatch": true,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        1360,
+        160
+      ],
+      "id": "1558958a-611a-409a-95e1-235d47a6c563",
+      "name": "Google Sheets",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jzdxqTTFKKi6JSME",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": " 7460408421",
+        "text": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Text', ``, 'string') }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegramTool",
+      "typeVersion": 1.2,
+      "position": [
+        660,
+        220
+      ],
+      "id": "b1da7f88-d5c9-442a-8c0e-85e00a94001b",
+      "name": "Telegram",
+      "webhookId": "90e799aa-840e-4af1-88ec-6166ded6bbf9",
+      "credentials": {
+        "telegramApi": {
+          "id": "SYGpqFnQJBGH10JB",
+          "name": "Telegram account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "sendTo": "agencianeurax@gmail.com",
+        "subject": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Subject', ``, 'string') }}",
+        "emailType": "text",
+        "message": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Message', ``, 'string') }}",
+        "options": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.gmailTool",
+      "typeVersion": 2.1,
+      "position": [
+        780,
+        220
+      ],
+      "id": "49f8d983-0b38-4e90-bfbf-b054745594c3",
+      "name": "Gmail",
+      "webhookId": "36c15657-7241-463c-92a7-11204be28f04",
+      "credentials": {
+        "gmailOAuth2": {
+          "id": "txeTeHg58ptCfUHh",
+          "name": "Gmail account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "documentId": {
+          "__rl": true,
+          "value": "1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ",
+          "mode": "list",
+          "cachedResultName": "FinanceFlow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 471698859,
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ/edit#gid=471698859"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        1360,
+        0
+      ],
+      "id": "4107cc7d-ebb8-495c-97a5-bbfcc271bc59",
+      "name": "getFinancialData",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jzdxqTTFKKi6JSME",
+          "name": "Google Sheets account"
+        }
+      }
+    },
+    {
+      "parameters": {},
+      "type": "@n8n/n8n-nodes-langchain.toolCalculator",
+      "typeVersion": 1,
+      "position": [
+        1020,
+        220
+      ],
+      "id": "fd8d6ba3-f203-429b-a529-8512aef926ad",
+      "name": "Calculator"
+    },
+    {
+      "parameters": {
+        "operation": "delete",
+        "documentId": {
+          "__rl": true,
+          "value": "1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ",
+          "mode": "list",
+          "cachedResultName": "FinanceFlow",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ/edit?usp=drivesdk"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": 471698859,
+          "mode": "list",
+          "cachedResultName": "Hoja1",
+          "cachedResultUrl": "https://docs.google.com/spreadsheets/d/1R1mCYgfes0bTUf5AW5ACYFsXfTSM4u7NPdGQROr6jRQ/edit#gid=471698859"
+        },
+        "startIndex": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Start_Row_Number', ``, 'number') }}",
+        "numberToDelete": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('Number_of_Rows_to_Delete', ``, 'number') }}"
+      },
+      "type": "n8n-nodes-base.googleSheetsTool",
+      "typeVersion": 4.5,
+      "position": [
+        1360,
+        -160
+      ],
+      "id": "60dda755-168a-4534-afd4-3350bbf3f7dc",
+      "name": "Google Sheets1",
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "jzdxqTTFKKi6JSME",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When chat message received": {
+      "main": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Think": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Gmail": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "getFinancialData": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Calculator": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Google Sheets1": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1"
+  },
+  "versionId": "f8ae0874-dd11-4c27-8845-9d3df05c6f73",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "e0b56e68b804c12294ee75f8fc07d0556304fe5992fedc6d0ec01ac0c5cf1b66"
+  },
+  "id": "Dcz6YhG48DbQorAF",
+  "tags": []
+}
