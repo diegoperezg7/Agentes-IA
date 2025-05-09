@@ -6,7 +6,7 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 
 ## 📁 Agentes Incluidos
 
-### 📣 MarketingWise AI
+### 📣 MarketingWise AI(https://github.com/diegoperezg7/Agentes-IA/blob/main/Agentes%20de%20IA/Agente_MarketingWise.json)
 **Objetivo**: Generar y publicar contenido en redes sociales automáticamente.  
 **Tecnologías**: OpenAI, Gmail, APIs sociales (LinkedIn, Instagram, Facebook, X)  
 **Funcionalidades**:
