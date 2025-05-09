@@ -20,17 +20,19 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 
 ---
 
-### 🧮 FinanceFlow
-**Objetivo**: Automatización de procesos contables.  
-**Tecnologías**: OpenAI, Google Sheets, Gmail, Telegram  
+### 📈 MyInvestor AI
+**Objetivo**: Automatización financiera personal y gestión inteligente de inversiones.
+**Tecnologías**: Telegram, OpenAI, Google Sheets, CoinGecko, AlphaVantage, QuickChart
 **Funcionalidades**:
-- Registra ingresos y gastos automáticamente.
-- Envía facturas por correo.
-- Alerta de pagos vencidos o ingresos esperados.
-- Genera reportes bajo demanda por texto.  
+- Consulta precios actualizados de criptomonedas y acciones desde tu cartera.
+- Actualiza automáticamente tu hoja de inversiones con precio actual, valor, rendimiento en € y %.
+- Analiza capturas de pantalla de tus movimientos o posiciones (por ejemplo, de Binance o Trading212).
+- Responde preguntas como “¿cómo van mis inversiones?” o “¿qué opinas de BTC?”.
+- Genera gráficos en tiempo real (ej. “gráfico de BTC en las últimas 24h”) y los envía por Telegram.
+- Ejecuta actualizaciones programadas cada 2 minutos para mantener tu cartera al día.
 
 
-![image](https://github.com/user-attachments/assets/6930fc4a-50b1-4eeb-b3b0-ebf071c706c1)
+![image](https://github.com/user-attachments/assets/1a5154c7-1d82-410a-a4ba-f1fe29f2e8b6)
 
 ---
 
@@ -44,6 +46,20 @@ Este repositorio contiene una colección de agentes de inteligencia artificial y
 
 
 ![image](https://github.com/user-attachments/assets/696ce08d-d3a5-4fac-8163-84916e2aa051)
+
+---
+
+### 🧮 FinanceFlow
+**Objetivo**: Automatización de procesos contables.  
+**Tecnologías**: OpenAI, Google Sheets, Gmail, Telegram  
+**Funcionalidades**:
+- Registra ingresos y gastos automáticamente.
+- Envía facturas por correo.
+- Alerta de pagos vencidos o ingresos esperados.
+- Genera reportes bajo demanda por texto.  
+
+
+![image](https://github.com/user-attachments/assets/6930fc4a-50b1-4eeb-b3b0-ebf071c706c1)
 
 ---
 
