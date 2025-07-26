@@ -1,116 +1,108 @@
-# 🤖 Agentes de IA – Automatización Inteligente para Empresas
+# 🤖 AI Agents – Intelligent Automation for Businesses
 
-Este repositorio contiene una colección de agentes de inteligencia artificial y workflows de automatización desarrollados para **NeuraX**, un proyecto personal que se basa en una agencia especializada en soluciones IA para empresas. Están diseñados con herramientas como `n8n`, `Make.com` y `OpenAI`, y están orientados a resolver tareas reales: desde atención al cliente hasta marketing, RRHH o contabilidad.
+This repository contains a collection of AI agents and automation workflows developed for **NeuraX**, a personal project built as an agency specializing in AI solutions for businesses. They are designed using tools like `n8n`, `Make.com`, and `OpenAI`, with a focus on solving real-world tasks: from customer service to marketing, HR, and accounting.
 
 ---
 
-## 📁 Agentes Incluidos
+## 📁 Included Agents
 
-### 📣 MarketingWise AI
-**Objetivo**: Generar y publicar contenido en redes sociales automáticamente.  
-**Tecnologías**: OpenAI, Gmail, APIs sociales (LinkedIn, Instagram, Facebook, X)  
-**Funcionalidades**:
-- Generación automática de contenido adaptado por plataforma.
-- Aprobación previa vía email (opcional).
-- Publicación multicanal en redes sociales.
-- Integración con formularios y carga de imágenes.  
-
+### 📣 MarketingWise AI  
+**Goal**: Automatically generate and publish content on social media.  
+**Technologies**: OpenAI, Gmail, social APIs (LinkedIn, Instagram, Facebook, X)  
+**Features**:
+- Platform-adapted content generation.
+- Optional pre-approval via email.
+- Multichannel posting across social networks.
+- Integration with forms and image upload.
 
 ![image](https://github.com/user-attachments/assets/9d8a5037-6334-4979-ad9c-d2a3eefe8114)
 
 ---
 
-### 📈 MyInvestor AI
-**Objetivo**: Automatización financiera personal y gestión inteligente de inversiones.
-**Tecnologías**: Telegram, OpenAI, Google Sheets, CoinGecko, AlphaVantage, QuickChart
-**Funcionalidades**:
-- Consulta precios actualizados de criptomonedas y acciones desde tu cartera.
-- Actualiza automáticamente tu hoja de inversiones con precio actual, valor, rendimiento en € y %.
-- Analiza capturas de pantalla de tus movimientos o posiciones (por ejemplo, de Binance o Trading212).
-- Responde preguntas como “¿cómo van mis inversiones?” o “¿qué opinas de BTC?”.
-- Genera gráficos en tiempo real (ej. “gráfico de BTC en las últimas 24h”) y los envía por Telegram.
-- Ejecuta actualizaciones programadas cada 2 minutos para mantener tu cartera al día.
-
+### 📈 MyInvestor AI  
+**Goal**: Personal finance automation and intelligent investment management.  
+**Technologies**: Telegram, OpenAI, Google Sheets, CoinGecko, AlphaVantage, QuickChart  
+**Features**:
+- Get real-time crypto and stock prices from your portfolio.
+- Auto-update your investment sheet with current price, value, gains/losses in € and %.
+- Analyze screenshots of your positions (e.g., from Binance or Trading212).
+- Ask questions like “How are my investments doing?” or “What do you think of BTC?”
+- Generate live charts (e.g., “BTC chart for last 24h”) and send them via Telegram.
+- Scheduled updates every 2 minutes to keep your portfolio current.
 
 ![image](https://github.com/user-attachments/assets/1a5154c7-1d82-410a-a4ba-f1fe29f2e8b6)
 
 ---
 
-### 📊 DataInsight AI
-**Objetivo**: Análisis de datos en lenguaje natural.  
-**Tecnologías**: OpenAI, Google Sheets, Telegram  
-**Funcionalidades**:
-- Realiza análisis sobre hojas de datos.
-- Responde preguntas como “¿cuál fue el producto más vendido?”
-- Informa tendencias, outliers y estadísticas claves.  
-
+### 📊 DataInsight AI  
+**Goal**: Natural language data analysis.  
+**Technologies**: OpenAI, Google Sheets, Telegram  
+**Features**:
+- Analyze data in spreadsheets.
+- Answer questions like “What was the best-selling product?”
+- Provide trends, outliers, and key statistics.
 
 ![image](https://github.com/user-attachments/assets/696ce08d-d3a5-4fac-8163-84916e2aa051)
 
 ---
 
-### 🧮 FinanceFlow
-**Objetivo**: Automatización de procesos contables.  
-**Tecnologías**: OpenAI, Google Sheets, Gmail, Telegram  
-**Funcionalidades**:
-- Registra ingresos y gastos automáticamente.
-- Envía facturas por correo.
-- Alerta de pagos vencidos o ingresos esperados.
-- Genera reportes bajo demanda por texto.  
-
+### 🧮 FinanceFlow  
+**Goal**: Automate accounting processes.  
+**Technologies**: OpenAI, Google Sheets, Gmail, Telegram  
+**Features**:
+- Automatically log income and expenses.
+- Send invoices via email.
+- Alert overdue payments or expected income.
+- Generate reports on-demand via text.
 
 ![image](https://github.com/user-attachments/assets/6930fc4a-50b1-4eeb-b3b0-ebf071c706c1)
 
 ---
 
-### 📜 LegalAssist AI
-**Objetivo**: Revisión de contratos y asesoría legal automatizada.  
-**Tecnologías**: OpenAI, Telegram, PDF Tools  
-**Funcionalidades**:
-- Analiza contratos en PDF o texto y detecta riesgos.
-- Responde preguntas legales en lenguaje natural.
-- Entrega resúmenes claros y directos para no-abogados.  
-
+### 📜 LegalAssist AI  
+**Goal**: Automated contract review and legal support.  
+**Technologies**: OpenAI, Telegram, PDF Tools  
+**Features**:
+- Analyze contracts (PDF or text) and detect potential risks.
+- Answer legal questions in plain language.
+- Provide clear summaries for non-lawyers.
 
 ![image](https://github.com/user-attachments/assets/56ee9fef-f253-4068-841c-f0fdcdc0d802)
 
 ---
 
-### 🧠 Agente Total
-**Objetivo**: Asistente IA completo multicanal y multitarea.  
-**Tecnologías**: Telegram, OpenAI (GPT + Whisper), Gmail, Calendar, LangChain Tools  
-**Funcionalidades**:
-- Procesa texto y voz en Telegram.
-- Accede a herramientas como calendario, correo, web y redes.
-- Actúa como un verdadero "copiloto" personal y profesional.  
-
+### 🧠 Total Agent  
+**Goal**: Full AI assistant – multichannel and multitask.  
+**Technologies**: Telegram, OpenAI (GPT + Whisper), Gmail, Calendar, LangChain Tools  
+**Features**:
+- Process text and voice messages via Telegram.
+- Access tools like calendar, email, web, and social platforms.
+- Acts as a true personal and professional "copilot".
 
 ![image](https://github.com/user-attachments/assets/ae6ab798-90b7-48c0-a28c-dd032d63ad71)
 
 ---
 
-### 🧾 ClientCare AI
-**Objetivo**: Automatización de la atención al cliente vía email.  
-**Tecnologías**: OpenAI, Gmail, Google Sheets, Telegram  
-**Funcionalidades**:
-- Clasificación automática de correos por tipo y gravedad.
-- Registro en Google Sheets con trazabilidad.
-- Generación automática de respuestas personalizadas.
-- Notificación por Telegram si la consulta es crítica.  
-
+### 🧾 ClientCare AI  
+**Goal**: Automate customer support via email.  
+**Technologies**: OpenAI, Gmail, Google Sheets, Telegram  
+**Features**:
+- Automatically classify emails by type and urgency.
+- Log each request in Google Sheets with traceability.
+- Generate personalized auto-responses.
+- Notify via Telegram if the request is critical.
 
 ![image](https://github.com/user-attachments/assets/84aef17d-32e1-4488-bbbd-45febfe9cd15)
 
 ---
 
-### 🧑‍💼 TalentBot (RRHH)
-**Objetivo**: Automatizar la recepción y análisis de currículums.  
-**Tecnologías**: Gmail, Google Calendar, OpenAI, Google Sheets  
-**Funcionalidades**:
-- Extrae información clave de CVs.
-- Evalúa candidatos según criterios definidos.
-- Genera correos automáticos según resultado (apto/no apto).
-- Agenda entrevistas y actualiza la base de datos.  
-
+### 🧑‍💼 TalentBot (HR)  
+**Goal**: Automate CV handling and candidate analysis.  
+**Technologies**: Gmail, Google Calendar, OpenAI, Google Sheets  
+**Features**:
+- Extract key information from resumes.
+- Evaluate candidates based on predefined criteria.
+- Auto-generate emails based on outcome (accepted/rejected).
+- Schedule interviews and update the database.
 
 ![image](https://github.com/user-attachments/assets/c5292a55-a829-43f6-b194-218ee89e16c5)
